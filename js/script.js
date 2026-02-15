@@ -130,13 +130,24 @@ document.addEventListener('DOMContentLoaded', () => {
     const lightbox = document.getElementById('lightbox');
     const lightboxImg = document.getElementById('lightbox-img');
     const closeBtn = document.querySelector('.close-lb');
+    const prevBtn = document.querySelector('.prev');
+    const nextBtn = document.querySelector('.next');
+    let galleryImages = []; // Array to store all gallery images
+    let currentIndex = 0;
 
     // Delegate click for masonry items
     const grid = document.getElementById('masonry-grid');
     if (grid) {
+        // Populate galleryImages array on load
+        galleryImages = Array.from(document.querySelectorAll('.masonry-item img'));
+
         grid.addEventListener('click', (e) => {
             if (e.target.tagName === 'IMG') {
-                lightboxImg.src = e.target.src;
+                // Update collection in case "Load More" added new items
+                galleryImages = Array.from(document.querySelectorAll('.masonry-item img'));
+                currentIndex = galleryImages.indexOf(e.target);
+
+                showImage(currentIndex);
                 lightbox.style.display = 'flex';
                 // Trigger reflow for fade in
                 lightbox.style.opacity = '0';
@@ -148,6 +159,25 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    const showImage = (index) => {
+        if (index >= 0 && index < galleryImages.length) {
+            lightboxImg.src = galleryImages[index].src;
+            currentIndex = index;
+        }
+    };
+
+    const nextImage = (e) => {
+        e.stopPropagation();
+        currentIndex = (currentIndex + 1) % galleryImages.length;
+        showImage(currentIndex);
+    };
+
+    const prevImage = (e) => {
+        e.stopPropagation();
+        currentIndex = (currentIndex - 1 + galleryImages.length) % galleryImages.length;
+        showImage(currentIndex);
+    };
+
     const closeLightbox = () => {
         lightbox.style.opacity = '0';
         setTimeout(() => {
@@ -156,6 +186,9 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     if (closeBtn) closeBtn.addEventListener('click', closeLightbox);
+    if (prevBtn) prevBtn.addEventListener('click', prevImage);
+    if (nextBtn) nextBtn.addEventListener('click', nextImage);
+
     if (lightbox) {
         lightbox.addEventListener('click', (e) => {
             if (e.target === lightbox) closeLightbox();
