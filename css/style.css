@@ -686,15 +686,17 @@ p { margin-bottom: 1rem; max-width: 65ch; }
     width: 100%; height: 140px; object-fit: cover; border-radius: 10px; margin-bottom: 10px; opacity: 0.9;
 }
 
-/* 8. Gallery Masonry */
+/* 8. Gallery - Justified Row Layout */
 .masonry-grid {
-    column-count: 3;
-    column-gap: 1.5rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem;
     margin-bottom: 3rem;
 }
 .masonry-item {
-    break-inside: avoid;
-    margin-bottom: 1.5rem;
+    flex-grow: 1;
+    height: 300px;
+    min-width: 300px;
     border-radius: 16px;
     overflow: hidden;
     position: relative;
@@ -703,6 +705,8 @@ p { margin-bottom: 1rem; max-width: 65ch; }
 }
 .masonry-item img {
     width: 100%;
+    height: 100%;
+    object-fit: cover;
     display: block;
     transition: transform 0.6s ease;
 }
